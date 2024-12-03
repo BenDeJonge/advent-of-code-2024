@@ -91,12 +91,7 @@ fn part_2(data: &mut [Vec<isize>; 2]) -> isize {
 mod tests {
     use super::{parse_input, part_1, part_2};
     use crate::util::read_file_to_string;
-    const INPUT: &str = "3   4
-4   3
-2   5`
-1   3
-3   9
-3   3";
+    const INPUT: &str = "3   4\n4   3\n2   5\n1   3\n3   9\n3   3";
 
     #[test]
     fn test_parse_input() {
