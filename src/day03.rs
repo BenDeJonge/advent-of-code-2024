@@ -7,13 +7,13 @@ use nom::sequence::{delimited, separated_pair};
 use nom::IResult;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
-enum Instruction {
+pub enum Instruction {
     Mul(u32, u32),
     Do,
     Dont,
 }
 
-fn parse_input(input: &str) -> Vec<Instruction> {
+pub fn parse_input(input: &str) -> Vec<Instruction> {
     let mut buffer = <Vec<Instruction>>::new();
     let mut parser = many0(many_till(anychar, parse_instruction));
     for line in input.lines() {
@@ -41,14 +41,14 @@ fn parse_instruction(input: &str) -> IResult<&str, Instruction> {
     ))(input)
 }
 
-fn part_1(data: &[Instruction]) -> u32 {
+pub fn part_1(data: &[Instruction]) -> u32 {
     data.iter().fold(0, |acc, instr| match instr {
         Instruction::Mul(l, r) => acc + l * r,
         _ => acc,
     })
 }
 
-fn part_2(data: &[Instruction]) -> u32 {
+pub fn part_2(data: &[Instruction]) -> u32 {
     data.iter()
         .fold((Instruction::Do, 0), |(state, acc), instr| match instr {
             Instruction::Mul(l, r) => match state {

@@ -5,7 +5,7 @@ use nom::error::Error;
 use nom::multi::separated_list1;
 use nom::{branch::alt, multi::many1};
 
-fn parse_input(input: &str) -> Matrix<char> {
+pub fn parse_input(input: &str) -> Matrix<char> {
     let mut parser = separated_list1(
         line_ending::<&str, Error<_>>,
         many1(alt((
@@ -19,7 +19,7 @@ fn parse_input(input: &str) -> Matrix<char> {
     Matrix::new(output)
 }
 
-fn part_1(data: &Matrix<char>) -> usize {
+pub fn part_1(data: &Matrix<char>) -> usize {
     count_xmas_samx_in_iter(data.row_iter())
         + count_xmas_samx_in_iter(data.col_iter())
         + count_xmas_samx_in_iter(data.diagonal_iter())
@@ -38,7 +38,7 @@ fn count_xmas_samx_in_iter<'a>(
     .sum()
 }
 
-fn part_2(data: &Matrix<char>) -> usize {
+pub fn part_2(data: &Matrix<char>) -> usize {
     let mut score = 0;
 
     for row in 0..(data.shape()[0] - 2) {

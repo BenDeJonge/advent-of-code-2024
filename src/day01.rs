@@ -4,7 +4,7 @@ use crate::util::parse_decimal;
 use nom::character::complete::space1;
 use nom::sequence::separated_pair;
 
-fn parse_input<T>(input: &str) -> [Vec<T>; 2]
+pub fn parse_input<T>(input: &str) -> [Vec<T>; 2]
 where
     T: std::str::FromStr,
     <T as std::str::FromStr>::Err: std::fmt::Debug,
@@ -21,7 +21,7 @@ where
     [left, right]
 }
 
-fn part_1<T>(data: &mut [Vec<T>; 2]) -> T
+pub fn part_1<T>(data: &mut [Vec<T>; 2]) -> T
 where
     T: std::cmp::Ord
         + std::ops::Sub
@@ -39,7 +39,7 @@ where
         .sum()
 }
 
-fn part_2(data: &mut [Vec<isize>; 2]) -> isize {
+pub fn part_2(data: &mut [Vec<isize>; 2]) -> isize {
     data[0].sort();
     data[1].sort();
     // Otherwise, the last number gets ignored. Remove this afterwards.

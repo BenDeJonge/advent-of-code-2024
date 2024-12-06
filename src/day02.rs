@@ -10,7 +10,7 @@ enum Gradient {
     Descending,
 }
 
-fn parse_input<T>(input: &str) -> Vec<Vec<T>>
+pub fn parse_input<T>(input: &str) -> Vec<Vec<T>>
 where
     T: std::str::FromStr,
     <T as std::str::FromStr>::Err: std::fmt::Debug,
@@ -58,7 +58,7 @@ where
     is_ok
 }
 
-fn part_1<T>(data: &[Vec<T>]) -> usize
+pub fn part_1<T>(data: &[Vec<T>]) -> usize
 where
     T: Copy + Into<isize> + std::ops::Sub<Output = T>,
 {
@@ -111,7 +111,7 @@ where
 ///
 /// This could be the basis for a slightly more efficient algorithm that solves
 /// the question in a single pass.
-fn part_2<T>(data: &[Vec<T>]) -> usize
+pub fn part_2<T>(data: &[Vec<T>]) -> usize
 where
     T: Copy + Into<isize> + std::ops::Sub<Output = T>,
 {
