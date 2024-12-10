@@ -2,7 +2,7 @@ use nom::{character::complete::one_of, combinator::recognize, multi::many1, IRes
 use std::fs::{read_to_string, File};
 use std::io;
 use std::io::BufRead;
-use std::ops::Deref;
+use std::ops::{Deref, DerefMut};
 use std::path::Path;
 
 pub fn read_file_to_string<P>(filename: P) -> String
@@ -47,6 +47,12 @@ impl<T> Deref for Matrix<T> {
     }
 }
 
+impl<T> DerefMut for Matrix<T> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.0
+    }
+}
+
 impl<T> Matrix<T> {
     /// This checks if all rows have the same column count
     /// and if so, moves the data in to the Matrix.
@@ -70,6 +76,19 @@ impl<T> Matrix<T> {
             self.len(),
             self.first().expect("first vector is not empty").len(),
         ]
+    }
+
+    pub fn get_element(&self, idx: [usize; 2]) -> Option<&T> {
+        self.get(idx[0]).and_then(|row| row.get(idx[1]))
+    }
+
+    pub fn set_element(&mut self, idx: [usize; 2], value: T) -> Option<()> {
+        if idx[0] < self.shape()[0] && idx[1] < self.shape()[1] {
+            self[idx[0]][idx[1]] = value;
+            return Some(());
+        } else {
+            None
+        }
     }
 
     pub fn row(&self, index: usize) -> Option<impl Iterator<Item = &T>> {
@@ -330,5 +349,18 @@ mod test {
                 assert_eq!(el1, el2)
             }
         }
+    }
+    #[test]
+    fn test_matrix_get() {
+        let matrix = Matrix::new(vec![
+            vec![0, 1, 2, 3],   //
+            vec![4, 5, 6, 7],   //
+            vec![8, 9, 10, 11], //
+        ]);
+        assert_eq!(matrix.get_element([0, 0]), Some(&0));
+        assert_eq!(matrix.get_element([2, 1]), Some(&9));
+        assert_eq!(matrix.get_element([0, 4]), None);
+        assert_eq!(matrix.get_element([3, 0]), None);
+        assert_eq!(matrix.get_element([3, 4]), None);
     }
 }
