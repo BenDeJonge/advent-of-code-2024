@@ -92,7 +92,7 @@ fn is_ok(calc: &Calculation<u64>, operations: &[Operation]) -> bool {
     }) == ControlFlow::Continue(calc.result)
 }
 
-/// The sum of the results of all calculations that can be made.
+/// The sum of the results of all calculations that can be made using Add and Multiply.
 pub fn part_1(calcs: &[Calculation<u64>]) -> u64 {
     calcs
         .iter()
@@ -101,7 +101,7 @@ pub fn part_1(calcs: &[Calculation<u64>]) -> u64 {
         .sum()
 }
 
-/// ???
+/// The sum of the results of all calculations that can be made using Add, Multiply and Combine.
 pub fn part_2(calcs: &[Calculation<u64>]) -> u64 {
     // TODO: include some early return that lets us know at which operation
     // index we started overflowing and pop all untill there.
