@@ -85,7 +85,7 @@ impl<T> Matrix<T> {
     pub fn set_element(&mut self, idx: [usize; 2], value: T) -> Option<()> {
         if idx[0] < self.shape()[0] && idx[1] < self.shape()[1] {
             self[idx[0]][idx[1]] = value;
-            return Some(());
+            Some(())
         } else {
             None
         }
