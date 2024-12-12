@@ -2,7 +2,7 @@ use nom::{character::complete::one_of, combinator::recognize, multi::many1, IRes
 use std::fs::{read_to_string, File};
 use std::io;
 use std::io::BufRead;
-use std::ops::{Deref, DerefMut};
+use std::ops::{Add, Deref, DerefMut, Mul, Sub};
 use std::path::Path;
 
 pub fn read_file_to_string<P>(filename: P) -> String
@@ -33,6 +33,59 @@ where
             output.1.parse::<T>().expect("Should contain only digits"),
         )),
         Err(e) => Err(e),
+    }
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+pub struct Coordinate {
+    x: isize,
+    y: isize,
+}
+
+impl Coordinate {
+    pub fn new(x: isize, y: isize) -> Self {
+        Coordinate { x, y }
+    }
+
+    pub fn is_in(&self, c1: &Self, c2: &Self) -> bool {
+        self.x >= c1.x && self.y >= c1.y && self.x < c2.x && self.y < c2.y
+    }
+}
+
+impl Default for Coordinate {
+    fn default() -> Self {
+        Coordinate::new(0, 0)
+    }
+}
+
+impl From<[isize; 2]> for Coordinate {
+    fn from(value: [isize; 2]) -> Self {
+        Coordinate::new(value[0], value[1])
+    }
+}
+
+impl Add for Coordinate {
+    type Output = Coordinate;
+    fn add(self, rhs: Self) -> Self::Output {
+        Coordinate::from([self.x + rhs.x, self.y + rhs.y])
+    }
+}
+
+impl Sub for Coordinate {
+    type Output = Coordinate;
+    fn sub(self, rhs: Self) -> Self::Output {
+        Coordinate::from([self.x - rhs.x, self.y - rhs.y])
+    }
+}
+
+impl<T> Mul<T> for Coordinate
+where
+    T: std::convert::Into<isize>,
+{
+    type Output = Coordinate;
+    fn mul(self, rhs: T) -> Self::Output {
+        let rhs_isze = rhs.into();
+        Coordinate::from([self.x * rhs_isze, self.y * rhs_isze])
     }
 }
 
