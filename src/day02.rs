@@ -58,6 +58,10 @@ where
     is_ok
 }
 
+/// Compute how many reports are safe.
+/// A report is considered safe if:
+/// - the absolute difference between all neighboring elements is in 1..=3.
+/// - the vector of number is monotonic.
 pub fn part_1<T>(data: &[Vec<T>]) -> usize
 where
     T: Copy + Into<isize> + std::ops::Sub<Output = T>,

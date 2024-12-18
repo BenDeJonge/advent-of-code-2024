@@ -41,6 +41,11 @@ fn parse_instruction(input: &str) -> IResult<&str, Instruction> {
     ))(input)
 }
 
+/// Compute the sum of all valid multiplications in the instruction set.
+/// An instruction is valid if it is of the form:
+/// ```regex
+/// mul\(\d+,\d+\)
+/// ```
 pub fn part_1(data: &[Instruction]) -> u32 {
     data.iter().fold(0, |acc, instr| match instr {
         Instruction::Mul(l, r) => acc + l * r,
@@ -48,6 +53,14 @@ pub fn part_1(data: &[Instruction]) -> u32 {
     })
 }
 
+/// Compute the sum of all valid multiplications in the instruction set.
+/// An instruction is valid if:
+/// - it is of the form:
+/// ```regex
+/// mul\(\d+,\d+\)
+/// ```
+/// - the current state is `do`, not `don't`. The state is toggled whenever the
+/// corresponding instruction is encountered.
 pub fn part_2(data: &[Instruction]) -> u32 {
     data.iter()
         .fold((Instruction::Do, 0), |(state, acc), instr| match instr {

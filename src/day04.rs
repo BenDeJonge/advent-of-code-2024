@@ -19,6 +19,11 @@ pub fn parse_input(input: &str) -> Matrix<char> {
     Matrix::new(output)
 }
 
+/// Count the number of occurences of `XMAS` in the crossword.
+/// Occurences are valid if the are read:
+/// - left to right or right to left
+/// - top to bottom or bottom to top
+/// - diagonalwise or antidiagonalwise.
 pub fn part_1(data: &Matrix<char>) -> usize {
     count_xmas_samx_in_iter(data.row_iter())
         + count_xmas_samx_in_iter(data.col_iter())
@@ -38,6 +43,13 @@ fn count_xmas_samx_in_iter<'a>(
     .sum()
 }
 
+/// Count the number of occurences of
+/// ```text
+/// M . M  |  S . M  |  S . S  |  M . S  
+/// . A .  |  . A .  |  . A .  |  . A .  
+/// S . S  |  S . M  |  M . M  |  M . S  
+/// ```
+/// in the crossword.
 pub fn part_2(data: &Matrix<char>) -> usize {
     let mut score = 0;
 

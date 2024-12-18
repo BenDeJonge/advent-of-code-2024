@@ -21,6 +21,8 @@ where
     [left, right]
 }
 
+/// Compute the sum of all absolute differences between equally-indexed elements
+/// in both sorted vectors.
 pub fn part_1<T>(data: &mut [Vec<T>; 2]) -> T
 where
     T: std::cmp::Ord
@@ -39,12 +41,13 @@ where
         .sum()
 }
 
+/// For each number in the first vector calculate the value times the number of
+/// occurences in the second vector, and sum all these results.
 pub fn part_2(data: &mut [Vec<isize>; 2]) -> isize {
     data[0].sort();
     data[1].sort();
     // Otherwise, the last number gets ignored. Remove this afterwards.
     data[0].push(0);
-    // data[1].push(0);
     let mut current = *data[0].first().expect("data[0] should not be empty");
     // Counting the number of occurences in both vectors.
     let mut n_left: isize = 0;
