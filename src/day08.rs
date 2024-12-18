@@ -51,21 +51,19 @@ where
             self.shape[0].try_into().expect("shape fits in i32"),
             self.shape[1].try_into().expect("shape fits in i32"),
         ]);
-        let nodes1 = (1isize..)
+        let nodes1 = (0isize..)
             .map(|i| a1 + delta * i)
             .take_while(|sum| sum.is_in(&origin, &topright));
-        let nodes2 = (1isize..)
+        let nodes2 = (0isize..)
             .map(|i| a2 - delta * i)
             .take_while(|sum| sum.is_in(&origin, &topright));
         if let Some(n) = n {
-            hashset.extend(nodes1.take(n));
-            hashset.extend(nodes2.take(n));
+            // When not calculating all nodes, an antenna is not considered a node.
+            hashset.extend(nodes1.skip(1).take(n));
+            hashset.extend(nodes2.skip(1).take(n));
         } else {
             hashset.extend(nodes1);
             hashset.extend(nodes2);
-            // When calculating all nodes, every antenna is also a node.
-            hashset.insert(a1);
-            hashset.insert(a2);
         }
     }
 }
