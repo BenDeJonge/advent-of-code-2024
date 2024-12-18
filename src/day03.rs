@@ -60,7 +60,7 @@ pub fn part_1(data: &[Instruction]) -> u32 {
 /// mul\(\d+,\d+\)
 /// ```
 /// - the current state is `do`, not `don't`. The state is toggled whenever the
-/// corresponding instruction is encountered.
+///   corresponding instruction is encountered.
 pub fn part_2(data: &[Instruction]) -> u32 {
     data.iter()
         .fold((Instruction::Do, 0), |(state, acc), instr| match instr {
