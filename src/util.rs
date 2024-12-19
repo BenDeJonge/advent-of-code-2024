@@ -1,4 +1,5 @@
 use nom::{character::complete::one_of, combinator::recognize, multi::many1, IResult, Parser};
+use std::collections::HashMap;
 use std::fs::{read_to_string, File};
 use std::io;
 use std::io::BufRead;
@@ -26,6 +27,22 @@ where
 pub fn count_digits(int: u64) -> u32 {
     int.checked_ilog10().unwrap_or(0) + 1
 }
+
+/// Add a number of counts to a hashmap that tracks the number of occurrences of
+/// `T`s. If the `T` is not yet present, insert the value.
+pub fn hashmap_add_or_default<T>(hashmap: &mut HashMap<T, usize>, key: T, value: usize)
+where
+    T: std::cmp::Eq,
+    T: std::hash::Hash,
+{
+    hashmap
+        .entry(key)
+        .and_modify(|count| {
+            *count += value;
+        })
+        .or_insert(value);
+}
+
 /// A nom parser to identify decimal numbers.
 pub fn parse_decimal<T>(input: &str) -> IResult<&str, T>
 where
