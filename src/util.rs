@@ -38,8 +38,8 @@ where
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub struct Coordinate {
-    x: isize,
-    y: isize,
+    pub x: isize,
+    pub y: isize,
 }
 
 impl Coordinate {
@@ -88,6 +88,13 @@ where
         Coordinate::from([self.x * rhs_isze, self.y * rhs_isze])
     }
 }
+
+pub const COORDINATE_OFFSETS_NESW: [Coordinate; 4] = [
+    Coordinate { x: -1, y: 0 }, // N
+    Coordinate { x: 0, y: 1 },  // E
+    Coordinate { x: 1, y: 0 },  // S
+    Coordinate { x: 0, y: -1 }, // W
+];
 
 #[derive(Debug, PartialEq, Eq)]
 pub struct Matrix<T>(Vec<Vec<T>>);
