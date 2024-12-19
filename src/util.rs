@@ -21,6 +21,11 @@ where
     let file = File::open(filename)?;
     Ok(io::BufReader::new(file).lines())
 }
+
+/// Count the number of digits in a u64.
+pub fn count_digits(int: u64) -> u32 {
+    int.checked_ilog10().unwrap_or(0) + 1
+}
 /// A nom parser to identify decimal numbers.
 pub fn parse_decimal<T>(input: &str) -> IResult<&str, T>
 where

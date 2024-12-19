@@ -8,6 +8,8 @@ use nom::{
     sequence::{separated_pair, terminated},
 };
 
+use crate::util::count_digits;
+
 #[derive(Clone, Copy, Debug)]
 pub enum Operation {
     Add,
@@ -68,10 +70,6 @@ fn backtrack(
     is_ok(calc, operations)
 }
 
-fn n_digits(int: u64) -> u32 {
-    int.checked_ilog10().unwrap_or(0) + 1
-}
-
 fn is_ok(calc: &Calculation<u64>, operations: &[Operation]) -> bool {
     (1..(calc.components.len())).try_fold(calc.components[0], |mut acc, i| {
         let other = calc.components[i];
@@ -79,7 +77,7 @@ fn is_ok(calc: &Calculation<u64>, operations: &[Operation]) -> bool {
             Operation::Add => acc += other,
             Operation::Multiply => acc *= other,
             Operation::Combine => {
-                acc = acc * 10u64.pow(n_digits(other)) + other;
+                acc = acc * 10u64.pow(count_digits(other)) + other;
             }
         }
         // Early return whenever the values get too large.
