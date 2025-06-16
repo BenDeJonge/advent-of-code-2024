@@ -96,7 +96,7 @@ where
 ///
 /// By investigating the above table, we can see that:
 /// - `[1, 3, 2, 4, 5]` can be fixed by removing the 3 at index 1 or the 2 at
-///    index 2.
+///   index 2.
 /// - `[8, 6, 4, 4, 1]` can be fixed by removing the 4 at index 2 or 3.
 /// - `[10,  1,  2,  3,  4]` and `[ 1,  2,  3,  4, 10]` can be fixed by removing
 ///   the 10 at the first and last index, respectively.
