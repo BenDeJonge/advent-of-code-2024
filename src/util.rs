@@ -3,6 +3,7 @@ use std::collections::HashMap;
 use std::fs::{read_to_string, File};
 use std::io;
 use std::io::BufRead;
+use std::ops::Range;
 use std::ops::{Add, Deref, DerefMut, Mul, Sub};
 use std::path::Path;
 
@@ -72,6 +73,57 @@ impl Coordinate {
     pub fn is_in(&self, c1: &Self, c2: &Self) -> bool {
         self.x >= c1.x && self.y >= c1.y && self.x < c2.x && self.y < c2.y
     }
+
+    pub fn north(&self) -> Coordinate {
+        Coordinate::new(self.x, self.y - 1)
+    }
+    pub fn south(&self) -> Coordinate {
+        Coordinate::new(self.x, self.y + 1)
+    }
+    pub fn east(&self) -> Coordinate {
+        Coordinate::new(self.x + 1, self.y)
+    }
+    pub fn west(&self) -> Coordinate {
+        Coordinate::new(self.x - 1, self.y)
+    }
+
+    pub fn cardinals(&self) -> [Coordinate; 4] {
+        [self.north(), self.east(), self.south(), self.west()]
+    }
+
+    pub fn north_east(&self) -> Coordinate {
+        Coordinate::new(self.x + 1, self.y - 1)
+    }
+    pub fn south_east(&self) -> Coordinate {
+        Coordinate::new(self.x + 1, self.y + 1)
+    }
+    pub fn south_west(&self) -> Coordinate {
+        Coordinate::new(self.x - 1, self.y + 1)
+    }
+    pub fn north_west(&self) -> Coordinate {
+        Coordinate::new(self.x - 1, self.y - 1)
+    }
+    pub fn diagonals(&self) -> [Coordinate; 4] {
+        [
+            self.north_east(),
+            self.south_east(),
+            self.south_west(),
+            self.north_west(),
+        ]
+    }
+
+    pub fn neighbors(&self) -> [Coordinate; 8] {
+        [
+            self.north(),
+            self.north_east(),
+            self.east(),
+            self.south_east(),
+            self.south(),
+            self.south_west(),
+            self.west(),
+            self.north_west(),
+        ]
+    }
 }
 
 impl Default for Coordinate {
@@ -83,6 +135,12 @@ impl Default for Coordinate {
 impl From<[isize; 2]> for Coordinate {
     fn from(value: [isize; 2]) -> Self {
         Coordinate::new(value[0], value[1])
+    }
+}
+
+impl From<Coordinate> for [isize; 2] {
+    fn from(value: Coordinate) -> Self {
+        [value.x, value.y]
     }
 }
 
@@ -153,6 +211,23 @@ impl<T> Matrix<T> {
         Self(data)
     }
 
+    pub fn new_like(matrix: &Matrix<T>) -> Matrix<usize> {
+        Matrix::new(vec![vec![0usize; matrix.shape()[1]]; matrix.shape()[0]])
+    }
+
+    pub fn row_range(&self) -> Range<usize> {
+        0..self.shape()[0]
+    }
+
+    pub fn col_range(&self) -> Range<usize> {
+        0..self.shape()[1]
+    }
+
+    pub fn row_col_range(&self) -> (Range<usize>, Range<usize>) {
+        (self.row_range(), self.col_range())
+    }
+
+    /// Gets shape as `[n_rows, n_cols]`.
     pub fn shape(&self) -> [usize; 2] {
         [
             self.len(),
