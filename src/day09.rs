@@ -221,7 +221,6 @@ pub fn part_2(memory: &mut Memory) -> usize {
         }
     }
     memory.files.sort_by(|a, b| a.start.cmp(&b.start));
-    // dbg!(&memory);
     memory.checksum()
 }
 

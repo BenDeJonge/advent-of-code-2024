@@ -84,7 +84,6 @@ fn is_ok(calc: &Calculation<u64>, operations: &[Operation]) -> bool {
         if acc <= calc.result {
             ControlFlow::Continue(acc)
         } else {
-            dbg!(calc, operations, acc);
             ControlFlow::Break(acc)
         }
     }) == ControlFlow::Continue(calc.result)

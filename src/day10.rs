@@ -30,8 +30,6 @@ impl EvaluationState {
 ///        .entry(trail[0])
 ///        .and_modify(|peaks| {
 ///            peaks.extend(hashed.iter());
-///            dbg!(trail[0]);
-///            dbg!(&peaks);
 ///         })
 ///         .or_insert(hashed);
 ///     return;
