@@ -59,7 +59,7 @@ where
     }
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct Coordinate {
     pub x: isize,
     pub y: isize,
@@ -387,12 +387,40 @@ impl<T> Matrix<T> {
     }
 }
 
+impl<T: Copy> Matrix<T> {
+    pub fn slice(&self, row: Range<usize>, col: Range<usize>) -> Matrix<T> {
+        let mut row_vec = Vec::with_capacity(row.end - row.start);
+        for r in self.row_range().skip(row.start) {
+            if !row.contains(&r) {
+                break;
+            }
+            let mut col_vec = Vec::with_capacity(col.end - col.start);
+            for c in self.col_range().skip(col.start) {
+                if !col.contains(&c) {
+                    break;
+                }
+                col_vec.push(self[r][c])
+            }
+            row_vec.push(col_vec);
+        }
+        Matrix::new(row_vec)
+    }
+}
+
 #[cfg(test)]
 mod test {
     use std::vec;
 
     use super::{parse_decimal, Matrix};
     use nom::{bytes::complete::tag, sequence::separated_pair};
+
+    fn get_matrix() -> Matrix<i32> {
+        Matrix::new(vec![
+            vec![0, 1, 2, 3],   //
+            vec![4, 5, 6, 7],   //
+            vec![8, 9, 10, 11], //
+        ])
+    }
 
     #[test]
     fn test_parse_decimal() {
@@ -431,11 +459,7 @@ mod test {
 
     #[test]
     fn test_matrix_rows() {
-        let matrix = Matrix::new(vec![
-            vec![0, 1, 2, 3],   //
-            vec![4, 5, 6, 7],   //
-            vec![8, 9, 10, 11], //
-        ]);
+        let matrix = get_matrix();
         for (row_iter, row_vec) in matrix.row_iter().zip([
             [0, 1, 2, 3],   //
             [4, 5, 6, 7],   //
@@ -448,11 +472,7 @@ mod test {
     }
     #[test]
     fn test_matrix_cols() {
-        let matrix = Matrix::new(vec![
-            vec![0, 1, 2, 3],   //
-            vec![4, 5, 6, 7],   //
-            vec![8, 9, 10, 11], //
-        ]);
+        let matrix = get_matrix();
         for (col_iter, col_vec) in
             matrix
                 .col_iter()
@@ -466,11 +486,7 @@ mod test {
 
     #[test]
     fn test_matrix_diagonal() {
-        let matrix = Matrix::new(vec![
-            vec![0, 1, 2, 3],   //
-            vec![4, 5, 6, 7],   //
-            vec![8, 9, 10, 11], //
-        ]);
+        let matrix = get_matrix();
 
         for (diag_iter, diag_vec) in matrix.diagonal_iter().zip([
             vec![8],
@@ -488,11 +504,7 @@ mod test {
 
     #[test]
     fn test_matrix_antidiagonal() {
-        let matrix = Matrix::new(vec![
-            vec![0, 1, 2, 3],   //
-            vec![4, 5, 6, 7],   //
-            vec![8, 9, 10, 11], //
-        ]);
+        let matrix = get_matrix();
 
         for (antidiag_iter, antidiag_vec) in matrix.antidiagonal_iter().zip([
             vec![0],
@@ -509,15 +521,24 @@ mod test {
     }
     #[test]
     fn test_matrix_get() {
-        let matrix = Matrix::new(vec![
-            vec![0, 1, 2, 3],   //
-            vec![4, 5, 6, 7],   //
-            vec![8, 9, 10, 11], //
-        ]);
+        let matrix = get_matrix();
         assert_eq!(matrix.get_element([0, 0]), Some(&0));
         assert_eq!(matrix.get_element([2, 1]), Some(&9));
         assert_eq!(matrix.get_element([0, 4]), None);
         assert_eq!(matrix.get_element([3, 0]), None);
         assert_eq!(matrix.get_element([3, 4]), None);
+    }
+
+    #[test]
+    fn test_slice() {
+        let matrix = get_matrix();
+        let slice = matrix.slice(0..2, 2..4);
+        assert_eq!(
+            slice,
+            Matrix::new(vec![
+                vec![2, 3], //
+                vec![6, 7], //
+            ])
+        )
     }
 }
