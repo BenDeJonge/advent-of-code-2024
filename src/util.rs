@@ -1,5 +1,6 @@
 use nom::{character::complete::one_of, combinator::recognize, multi::many1, IResult, Parser};
 use std::collections::HashMap;
+use std::fmt::Display;
 use std::fs::{read_to_string, File};
 use std::io;
 use std::io::BufRead;
@@ -404,6 +405,18 @@ impl<T: Copy> Matrix<T> {
             row_vec.push(col_vec);
         }
         Matrix::new(row_vec)
+    }
+}
+
+impl<T: Display + Display> Display for Matrix<T> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        for row in self.row_range() {
+            for col in self.col_range() {
+                write!(f, "{}", self[row][col])?;
+            }
+            writeln!(f,)?;
+        }
+        Ok(())
     }
 }
 
