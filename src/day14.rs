@@ -13,7 +13,7 @@ use nom::character::complete::i32;
 
 use crate::util::Coordinate;
 
-const DIMENSIONS: Coordinate = Coordinate { x: 101, y: 103 };
+const DIMENSIONS: Coordinate = Coordinate { r: 101, c: 103 };
 const N_STEPS_PART_1: usize = 100;
 const N_STEPS_PART_2: usize = 10_000;
 
@@ -72,37 +72,37 @@ struct Quadrant<T> {
 
 impl Quadrant<isize> {
     pub fn contains(&self, coordinate: &Coordinate) -> bool {
-        self.x.contains(&coordinate.x) && self.y.contains(&coordinate.y)
+        self.x.contains(&coordinate.r) && self.y.contains(&coordinate.c)
     }
 
     pub fn top_left(dimensions: &Coordinate) -> Self {
         Quadrant {
-            x: 0..(dimensions.x / 2),
-            y: 0..(dimensions.y / 2),
+            x: 0..(dimensions.r / 2),
+            y: 0..(dimensions.c / 2),
             count: 0,
         }
     }
 
     pub fn bottom_left(dimensions: &Coordinate) -> Self {
         Quadrant {
-            x: 0..(dimensions.x / 2),
-            y: (dimensions.y - dimensions.y / 2)..dimensions.y,
+            x: 0..(dimensions.r / 2),
+            y: (dimensions.c - dimensions.c / 2)..dimensions.c,
             count: 0,
         }
     }
 
     pub fn top_right(dimensions: &Coordinate) -> Self {
         Quadrant {
-            x: (dimensions.x - dimensions.x / 2)..dimensions.x,
-            y: 0..(dimensions.y / 2),
+            x: (dimensions.r - dimensions.r / 2)..dimensions.r,
+            y: 0..(dimensions.c / 2),
             count: 0,
         }
     }
 
     pub fn bottom_right(dimensions: &Coordinate) -> Self {
         Quadrant {
-            x: (dimensions.x - dimensions.x / 2)..dimensions.x,
-            y: (dimensions.y - dimensions.y / 2)..dimensions.y,
+            x: (dimensions.r - dimensions.r / 2)..dimensions.r,
+            y: (dimensions.c - dimensions.c / 2)..dimensions.c,
             count: 0,
         }
     }
@@ -110,16 +110,16 @@ impl Quadrant<isize> {
 
 pub fn get_total_step(robot: &Robot, steps: usize) -> Coordinate {
     Coordinate::from([
-        robot.velocity.x * steps as isize,
-        robot.velocity.y * steps as isize,
+        robot.velocity.r * steps as isize,
+        robot.velocity.c * steps as isize,
     ])
 }
 
 pub fn get_destination(robot: &Robot, steps: usize, dimensions: &Coordinate) -> Coordinate {
     let destination = robot.coordinate + get_total_step(robot, steps);
     Coordinate::new(
-        destination.x.rem_euclid(dimensions.x),
-        destination.y.rem_euclid(dimensions.y),
+        destination.r.rem_euclid(dimensions.r),
+        destination.c.rem_euclid(dimensions.c),
     )
 }
 
@@ -172,7 +172,7 @@ mod test {
 
     use super::parse_input;
 
-    const DIMENSIONS_SMALL: Coordinate = Coordinate { x: 11, y: 7 };
+    const DIMENSIONS_SMALL: Coordinate = Coordinate { r: 11, c: 7 };
     const INPUT: &str = "p=0,4 v=3,-3
 p=6,3 v=-1,-3
 p=10,3 v=-1,2

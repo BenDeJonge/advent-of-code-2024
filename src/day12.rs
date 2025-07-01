@@ -58,7 +58,7 @@ fn get_n_equal_neighbors<T: PartialEq>(coord: Coord, matrix: &Matrix<T>) -> Opti
 /// assert_eq!(watershed(&matrix), expected)
 /// ```
 pub fn watershed<T: PartialEq>(matrix: &Matrix<T>) -> Matrix<usize> {
-    let mut output = Matrix::new_like(matrix);
+    let mut output = Matrix::new_like(matrix, 0usize);
     let mut counter = 0usize;
     let mut visited = Matrix::new(vec![vec![false; matrix.shape()[1]]; matrix.shape()[0]]);
     for row in matrix.row_range() {
@@ -68,7 +68,7 @@ pub fn watershed<T: PartialEq>(matrix: &Matrix<T>) -> Matrix<usize> {
             }
             let mut queue = vec![Coordinate::new(row as isize, col as isize)];
             while let Some(coord) = queue.pop() {
-                let [row, col] = [coord.x as usize, coord.y as usize];
+                let [row, col] = [coord.r as usize, coord.c as usize];
                 if visited[row][col] {
                     continue;
                 }
@@ -86,11 +86,11 @@ pub fn watershed<T: PartialEq>(matrix: &Matrix<T>) -> Matrix<usize> {
 }
 
 fn get_cardinal_neighbors<T: PartialEq>(coord: Coordinate, matrix: &Matrix<T>) -> Vec<Coordinate> {
-    let [row, col] = [coord.x as usize, coord.y as usize];
+    let [row, col] = [coord.r as usize, coord.c as usize];
     let mut vector = vec![];
     for neighbor in coord.cardinals() {
-        if !neighbor.x.is_negative() && !neighbor.y.is_negative() {
-            let [neighbor_row, neighbor_col] = [neighbor.x as usize, neighbor.y as usize];
+        if !neighbor.r.is_negative() && !neighbor.c.is_negative() {
+            let [neighbor_row, neighbor_col] = [neighbor.r as usize, neighbor.c as usize];
             if let Some(n) = matrix.get_element([neighbor_row, neighbor_col]) {
                 if n == &(matrix[row][col]) {
                     vector.push(neighbor);
@@ -101,11 +101,11 @@ fn get_cardinal_neighbors<T: PartialEq>(coord: Coordinate, matrix: &Matrix<T>) -
     vector
 }
 fn get_diagonal_neighbors<T: PartialEq>(coord: Coordinate, matrix: &Matrix<T>) -> Vec<Coordinate> {
-    let [row, col] = [coord.x as usize, coord.y as usize];
+    let [row, col] = [coord.r as usize, coord.c as usize];
     let mut vector = vec![];
     for neighbor in coord.diagonals() {
-        if !neighbor.x.is_negative() && !neighbor.y.is_negative() {
-            let [neighbor_row, neighbor_col] = [neighbor.x as usize, neighbor.y as usize];
+        if !neighbor.r.is_negative() && !neighbor.c.is_negative() {
+            let [neighbor_row, neighbor_col] = [neighbor.r as usize, neighbor.c as usize];
             if let Some(n) = matrix.get_element([neighbor_row, neighbor_col]) {
                 if n == &(matrix[row][col]) {
                     vector.push(neighbor);
@@ -282,8 +282,8 @@ pub fn part_2(matrix: &Matrix<char>) -> usize {
         for col in 0..matrix.shape()[1] {
             let n_corners = added_corners(
                 Coordinate {
-                    x: row as isize,
-                    y: col as isize,
+                    r: row as isize,
+                    c: col as isize,
                 },
                 matrix,
             );

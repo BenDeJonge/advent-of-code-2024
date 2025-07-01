@@ -47,7 +47,7 @@ fn evaluate_coordinate(
         if !neighbor_coord.is_in(bounds[0], bounds[1]) {
             continue;
         }
-        let neighbor_val = matrix[neighbor_coord.x as usize][neighbor_coord.y as usize];
+        let neighbor_val = matrix[neighbor_coord.r as usize][neighbor_coord.c as usize];
         if neighbor_val != current_val + 1 {
             continue;
         }

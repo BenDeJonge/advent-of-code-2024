@@ -61,30 +61,30 @@ where
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct Coordinate {
-    pub x: isize,
-    pub y: isize,
+    pub r: isize,
+    pub c: isize,
 }
 
 impl Coordinate {
-    pub fn new(x: isize, y: isize) -> Self {
-        Coordinate { x, y }
+    pub fn new(r: isize, c: isize) -> Self {
+        Coordinate { r, c }
     }
 
     pub fn is_in(&self, c1: &Self, c2: &Self) -> bool {
-        self.x >= c1.x && self.y >= c1.y && self.x < c2.x && self.y < c2.y
+        self.r >= c1.r && self.c >= c1.c && self.r < c2.r && self.c < c2.c
     }
 
     pub fn north(&self) -> Coordinate {
-        Coordinate::new(self.x, self.y - 1)
+        Coordinate::new(self.r - 1, self.c)
     }
     pub fn south(&self) -> Coordinate {
-        Coordinate::new(self.x, self.y + 1)
+        Coordinate::new(self.r + 1, self.c)
     }
     pub fn east(&self) -> Coordinate {
-        Coordinate::new(self.x + 1, self.y)
+        Coordinate::new(self.r, self.c + 1)
     }
     pub fn west(&self) -> Coordinate {
-        Coordinate::new(self.x - 1, self.y)
+        Coordinate::new(self.r, self.c - 1)
     }
 
     pub fn cardinals(&self) -> [Coordinate; 4] {
@@ -92,16 +92,16 @@ impl Coordinate {
     }
 
     pub fn north_east(&self) -> Coordinate {
-        Coordinate::new(self.x + 1, self.y - 1)
+        Coordinate::new(self.r - 1, self.c + 1)
     }
     pub fn south_east(&self) -> Coordinate {
-        Coordinate::new(self.x + 1, self.y + 1)
+        Coordinate::new(self.r + 1, self.c + 1)
     }
     pub fn south_west(&self) -> Coordinate {
-        Coordinate::new(self.x - 1, self.y + 1)
+        Coordinate::new(self.r + 1, self.c - 1)
     }
     pub fn north_west(&self) -> Coordinate {
-        Coordinate::new(self.x - 1, self.y - 1)
+        Coordinate::new(self.r - 1, self.c - 1)
     }
     pub fn diagonals(&self) -> [Coordinate; 4] {
         [
@@ -140,21 +140,21 @@ impl From<[isize; 2]> for Coordinate {
 
 impl From<Coordinate> for [isize; 2] {
     fn from(value: Coordinate) -> Self {
-        [value.x, value.y]
+        [value.r, value.c]
     }
 }
 
 impl Add for Coordinate {
     type Output = Coordinate;
     fn add(self, rhs: Self) -> Self::Output {
-        Coordinate::from([self.x + rhs.x, self.y + rhs.y])
+        Coordinate::from([self.r + rhs.r, self.c + rhs.c])
     }
 }
 
 impl Sub for Coordinate {
     type Output = Coordinate;
     fn sub(self, rhs: Self) -> Self::Output {
-        Coordinate::from([self.x - rhs.x, self.y - rhs.y])
+        Coordinate::from([self.r - rhs.r, self.c - rhs.c])
     }
 }
 
@@ -165,15 +165,15 @@ where
     type Output = Coordinate;
     fn mul(self, rhs: T) -> Self::Output {
         let rhs_isze = rhs.into();
-        Coordinate::from([self.x * rhs_isze, self.y * rhs_isze])
+        Coordinate::from([self.r * rhs_isze, self.c * rhs_isze])
     }
 }
 
 pub const COORDINATE_OFFSETS_NESW: [Coordinate; 4] = [
-    Coordinate { x: -1, y: 0 }, // N
-    Coordinate { x: 0, y: 1 },  // E
-    Coordinate { x: 1, y: 0 },  // S
-    Coordinate { x: 0, y: -1 }, // W
+    Coordinate { r: -1, c: 0 }, // N
+    Coordinate { r: 0, c: 1 },  // E
+    Coordinate { r: 1, c: 0 },  // S
+    Coordinate { r: 0, c: -1 }, // W
 ];
 
 #[derive(Debug, PartialEq, Eq)]
