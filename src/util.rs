@@ -212,8 +212,8 @@ impl<T> Matrix<T> {
         Self(data)
     }
 
-    pub fn new_like(matrix: &Matrix<T>) -> Matrix<usize> {
-        Matrix::new(vec![vec![0usize; matrix.shape()[1]]; matrix.shape()[0]])
+    pub fn new_like<V: Clone>(matrix: &Matrix<T>, value: V) -> Matrix<V> {
+        Matrix::new(vec![vec![value; matrix.shape()[1]]; matrix.shape()[0]])
     }
 
     pub fn row_range(&self) -> Range<usize> {
@@ -236,20 +236,25 @@ impl<T> Matrix<T> {
         ]
     }
 
-    pub fn get_element(&self, idx: [usize; 2]) -> Option<&T> {
-        self.get(idx[0]).and_then(|row| row.get(idx[1]))
+    pub fn get_element(&self, idx: impl Into<[usize; 2]>) -> Option<&T> {
+        let arr = idx.into();
+        self.get(arr[0]).and_then(|row| row.get(arr[1]))
     }
 
-    pub fn set_element(&mut self, idx: [usize; 2], value: T) -> Option<()> {
-        if idx[0] < self.shape()[0] && idx[1] < self.shape()[1] {
-            self[idx[0]][idx[1]] = value;
+    pub fn set_element(&mut self, idx: impl Into<[usize; 2]>, value: T) -> Option<()> {
+        let arr = idx.into();
+        if arr[0] < self.shape()[0] && arr[1] < self.shape()[1] {
+            self[arr[0]][arr[1]] = value;
             Some(())
         } else {
             None
         }
     }
 
-    pub fn row(&self, index: usize) -> Option<impl Iterator<Item = &T>> {
+    pub fn row(
+        &self,
+        index: usize,
+    ) -> Option<impl DoubleEndedIterator<Item = &T> + ExactSizeIterator<Item = &T>> {
         if index >= self.shape()[0] {
             return None;
         }
@@ -260,7 +265,10 @@ impl<T> Matrix<T> {
         (0..self.shape()[0]).map(|index| self.row(index).unwrap())
     }
 
-    pub fn col(&self, index: usize) -> Option<impl Iterator<Item = &T>> {
+    pub fn col(
+        &self,
+        index: usize,
+    ) -> Option<impl DoubleEndedIterator<Item = &T> + ExactSizeIterator<Item = &T>> {
         if index >= self.shape()[1] {
             return None;
         }
