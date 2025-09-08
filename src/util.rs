@@ -104,6 +104,16 @@ impl Coordinate {
     pub fn north_west(&self) -> Coordinate {
         Coordinate::new(self.r - 1, self.c - 1)
     }
+
+    pub fn cardinal(&self, cardinal: Cardinal) -> Self {
+        match cardinal {
+            Cardinal::North => self.north(),
+            Cardinal::East => self.east(),
+            Cardinal::South => self.south(),
+            Cardinal::West => self.west(),
+        }
+    }
+
     pub fn diagonals(&self) -> [Coordinate; 4] {
         [
             self.north_east(),
@@ -170,12 +180,47 @@ where
     }
 }
 
+#[derive(PartialEq, Debug, Clone, Copy, Eq, PartialOrd, Ord, Hash)]
+pub enum Cardinal {
+    North,
+    East,
+    South,
+    West,
+}
+
+impl Cardinal {
+    pub fn opposite(self) -> Self {
+        match self {
+            Cardinal::North => Cardinal::South,
+            Cardinal::East => Cardinal::West,
+            Cardinal::South => Cardinal::North,
+            Cardinal::West => Cardinal::East,
+        }
+    }
+}
+
+const COORDINATE_NORTH: Coordinate = Coordinate { r: -1, c: 0 };
+const COORDINATE_EAST: Coordinate = Coordinate { r: 0, c: 1 };
+const COORDINATE_SOUTH: Coordinate = Coordinate { r: 1, c: 0 };
+const COORDINATE_WEST: Coordinate = Coordinate { r: 0, c: -1 };
+
 pub const COORDINATE_OFFSETS_NESW: [Coordinate; 4] = [
-    Coordinate { r: -1, c: 0 }, // N
-    Coordinate { r: 0, c: 1 },  // E
-    Coordinate { r: 1, c: 0 },  // S
-    Coordinate { r: 0, c: -1 }, // W
+    COORDINATE_NORTH,
+    COORDINATE_EAST,
+    COORDINATE_SOUTH,
+    COORDINATE_WEST,
 ];
+
+impl From<Cardinal> for Coordinate {
+    fn from(value: Cardinal) -> Self {
+        match value {
+            Cardinal::North => COORDINATE_NORTH,
+            Cardinal::East => COORDINATE_EAST,
+            Cardinal::South => COORDINATE_SOUTH,
+            Cardinal::West => COORDINATE_WEST,
+        }
+    }
+}
 
 #[derive(Debug, PartialEq, Eq)]
 pub struct Matrix<T>(Vec<Vec<T>>);

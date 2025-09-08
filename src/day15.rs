@@ -10,31 +10,6 @@ use nom::{
 
 use crate::util::{Coordinate, Matrix};
 
-#[repr(u8)]
-#[derive(PartialEq, Debug, Clone, Copy)]
-pub enum Cardinal {
-    North = b'^',
-    East = b'>',
-    South = b'v',
-    West = b'<',
-}
-
-const COORDINATE_NORTH: Coordinate = Coordinate { r: -1, c: 0 };
-const COORDINATE_EAST: Coordinate = Coordinate { r: 0, c: 1 };
-const COORDINATE_SOUTH: Coordinate = Coordinate { r: 1, c: 0 };
-const COORDINATE_WEST: Coordinate = Coordinate { r: 0, c: -1 };
-
-impl From<Cardinal> for Coordinate {
-    fn from(value: Cardinal) -> Self {
-        match value {
-            Cardinal::North => COORDINATE_NORTH,
-            Cardinal::East => COORDINATE_EAST,
-            Cardinal::South => COORDINATE_SOUTH,
-            Cardinal::West => COORDINATE_WEST,
-        }
-    }
-}
-
 #[derive(Debug)]
 pub struct CannotParseFromChar;
 
@@ -113,6 +88,31 @@ fn parse_directions(input: &str) -> IResult<&str, Vec<Cardinal>> {
         },
     )
     .parse(input)
+}
+
+#[repr(u8)]
+#[derive(PartialEq, Debug, Clone, Copy, Eq)]
+pub enum Cardinal {
+    North = b'^',
+    East = b'>',
+    South = b'v',
+    West = b'<',
+}
+
+const COORDINATE_NORTH: Coordinate = Coordinate { r: -1, c: 0 };
+const COORDINATE_EAST: Coordinate = Coordinate { r: 0, c: 1 };
+const COORDINATE_SOUTH: Coordinate = Coordinate { r: 1, c: 0 };
+const COORDINATE_WEST: Coordinate = Coordinate { r: 0, c: -1 };
+
+impl From<Cardinal> for Coordinate {
+    fn from(value: Cardinal) -> Self {
+        match value {
+            Cardinal::North => COORDINATE_NORTH,
+            Cardinal::East => COORDINATE_EAST,
+            Cardinal::South => COORDINATE_SOUTH,
+            Cardinal::West => COORDINATE_WEST,
+        }
+    }
 }
 
 #[derive(PartialEq, Debug)]
